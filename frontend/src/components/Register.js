@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { register, reset } from "../redux/slice/authSlice";
+import { register, reset } from "../redux/slices/authSlice";
 
 const Register = () => {
   const initialState = {

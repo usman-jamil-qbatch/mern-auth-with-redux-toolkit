@@ -3,18 +3,23 @@ const mongoose = require("mongoose");
 var cors = require("cors");
 var app = express();
 const bodyParser = require("body-parser");
-var routes = require("./routes/userRoute");
+var auth = require("./routes/userRoute");
+var intrest = require("./routes/intrestRoute");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
-app.use("/", routes);
+app.use("/user", auth);
+app.use("/intrest", intrest);
 
 mongoose
-  .connect("mongodb://localhost:27017/user", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb+srv://demoProject:MlwQqGzWa55foywD@cluster0.stg1vg7.mongodb.net/demo-project",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then(() => console.log("connected to database"))
   .catch((err) => {
     console.error(err);

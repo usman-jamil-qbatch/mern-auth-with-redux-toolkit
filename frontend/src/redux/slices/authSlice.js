@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const user = JSON.parse(localStorage.getItem("user"));
+// const user = JSON.parse(localStorage.getItem("user"));
 
 const initialState = {
-  user: user ? user : null,
+  // user: user ? user : null,
+  user: null,
   isError: false,
   isSucces: false,
   isLoading: false,
@@ -15,11 +16,14 @@ export const register = createAsyncThunk(
   "auth/register",
   async (user, thunkAPI) => {
     try {
-      const response = await axios.post("http://localhost:8081/register", user);
+      const response = await axios.post(
+        "http://localhost:8081/user/register",
+        user
+      );
 
-      if (response.data) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-      }
+      // if (response.data) {
+      //   localStorage.setItem("user", JSON.stringify(response.data));
+      // }
       return response.data;
     } catch (error) {
       const message =
@@ -36,11 +40,10 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
   try {
-    const response = await axios.post("http://localhost:8081/login", user);
-
-    if (response.data) {
-      localStorage.setItem("user", JSON.stringify(response.data));
-    }
+    const response = await axios.post("http://localhost:8081/user/login", user);
+    // if (response.data) {
+    //   localStorage.setItem("user", JSON.stringify(response.data));
+    // }
 
     return response.data;
 

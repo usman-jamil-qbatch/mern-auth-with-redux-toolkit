@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login, reset } from "../redux/slice/authSlice";
+import { login, reset } from "../redux/slices/authSlice";
 
-const Register = () => {
+const Login = () => {
   const initialState = {
     email: "",
     password: "",
@@ -62,4 +62,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;

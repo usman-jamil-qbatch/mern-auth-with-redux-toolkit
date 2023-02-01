@@ -1,10 +1,8 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-const Protected = ({ children, redirect }) => {
-  const { user, isLoading, isError, isSucces, message } = useSelector(
-    (state) => state.auth
-  );
-  console.log();
-  return user ? children : redirect;
+const Protected = ({ component: Component, redirectTo = "/" }) => {
+  const { user } = useSelector((state) => state.auth);
+  return user ? Component : <Navigate to={redirectTo} />;
 };
 export default Protected;

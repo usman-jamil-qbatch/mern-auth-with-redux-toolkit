@@ -24,6 +24,7 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    intrests: [],
   },
   {
     timestamps: true,
