@@ -6,14 +6,17 @@ require("dotenv").config();
 
 const createIntreest = async (req, res) => {
   try {
-    const { intrests } = req.body;
+    const { intrest } = req.body;
     const status = await User.updateOne(
       { _id: req.user.id },
-      { $push: { intrests } }
+      { $push: { intrests: { intrest } } }
     );
     if (status.modifiedCount == 1) {
-      const data = await User.findOne({ _id: req.user.id });
-      return res.send(data.intrests);
+      const data = await User.find(
+        { _id: req.user.id },
+        { intrests: { $elemMatch: { intrest: req.body.intrest } } }
+      );
+      return res.send(data[0].intrests[0]);
     } else {
       res.status(500);
       throw new Error("server error");
@@ -24,18 +27,27 @@ const createIntreest = async (req, res) => {
 };
 
 const getIntrest = async (req, res) => {
-  const result = await User.findOne({ _id: req.user.id });
-  res.send(result.intrests);
+  try {
+    const result = await User.findOne({ _id: req.user.id });
+    res.send(result.intrests);
+  } catch (error) {
+    res.send(error.message);
+  }
 };
 
 const deleteIntrest = async (req, res) => {
   try {
     const status = await User.updateOne(
       { _id: req.user.id },
-      { $pull: { intrests: req.body.intrest } }
+      { $pull: { intrests: { intrest: req.body.intrest } } }
     );
+
     if (status.modifiedCount == 1) {
       const data = await User.findOne({ _id: req.user.id });
+      //   const test = await User.find(
+      //     { _id: req.user.id },
+      //     { intrests: { $elemMatch: { intrest: req.body.intrest } } }
+      //   );
       return res.send(data.intrests);
     } else {
       res.status(500);
@@ -47,20 +59,8 @@ const deleteIntrest = async (req, res) => {
   }
 };
 
-// const updateUser = async (req, res) => {
-//   const user = await User.updateUserById(req.params.userId, req.body);
-//   res.send(user);
-// };
-
-// const deleteUser = async (req, res) => {
-//   await User.deleteUserById(req.params.userId);
-//   res.send(true);
-// };
-
 module.exports = {
   createIntreest,
   getIntrest,
   deleteIntrest,
-  // updateUser,
-  // deleteUser,
 };

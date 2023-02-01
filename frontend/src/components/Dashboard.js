@@ -16,10 +16,8 @@ const Dashboard = () => {
 
   const { intrests } = useSelector((state) => state.intrests);
 
-  const { user } = useSelector((state) => state.auth);
-
   useEffect(() => {
-    dispatch(getIntrests(user));
+    dispatch(getIntrests());
   }, []);
 
   const handleLogout = () => {
@@ -38,23 +36,20 @@ const Dashboard = () => {
       alert("Add intrest first");
       return;
     }
-    const data = { details, token: user };
-    dispatch(createIntrest(data));
+    dispatch(createIntrest(details));
   };
 
   const handleDelete = (intrest) => {
-    let data = { intrest, token: user };
-    dispatch(deleteIntrest(data));
+    dispatch(deleteIntrest(intrest));
   };
-
   return (
     <div>
       <div>Dashboard</div>
       {intrests &&
         intrests.length > 0 &&
-        intrests.map((data, i) => (
-          <button key={i} onClick={() => handleDelete(data)}>
-            {data}
+        intrests?.map((data, i) => (
+          <button key={i} onClick={() => handleDelete(data.intrest)}>
+            {data.intrest}
           </button>
         ))}
       <form onSubmit={formSubmit}>

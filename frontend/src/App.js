@@ -6,8 +6,14 @@ import Dashboard from "./components/Dashboard";
 import Protected from "./components/Protected";
 import Home from "./components/Home";
 import Ristricted from "./components/Ristricted";
+import { setAuthToken } from "./config/axios-config";
+import { useSelector, useDispatch } from "react-redux";
 
 function App() {
+  const { user } = useSelector((state) => state.auth);
+  if (user) {
+    setAuthToken(user);
+  }
   return (
     <div className="App">
       <Router>

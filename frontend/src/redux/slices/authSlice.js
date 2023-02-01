@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { setAuthToken } from "../../config/axios-config";
 
-// const user = JSON.parse(localStorage.getItem("user"));
+axios.defaults.baseURL = "http://localhost:8081";
 
 const initialState = {
-  // user: user ? user : null,
   user: null,
   isError: false,
   isSucces: false,
@@ -16,14 +16,8 @@ export const register = createAsyncThunk(
   "auth/register",
   async (user, thunkAPI) => {
     try {
-      const response = await axios.post(
-        "http://localhost:8081/user/register",
-        user
-      );
-
-      // if (response.data) {
-      //   localStorage.setItem("user", JSON.stringify(response.data));
-      // }
+      const response = await axios.post("/user/register", user);
+      setAuthToken(response.data);
       return response.data;
     } catch (error) {
       const message =
@@ -40,14 +34,9 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
   try {
-    const response = await axios.post("http://localhost:8081/user/login", user);
-    // if (response.data) {
-    //   localStorage.setItem("user", JSON.stringify(response.data));
-    // }
-
+    const response = await axios.post("/user/login", user);
+    setAuthToken(response.data);
     return response.data;
-
-    //
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -59,7 +48,7 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
 });
 
 export const logout = createAsyncThunk("auth/logout", async () => {
-  return localStorage.removeItem("user");
+  setAuthToken();
 });
 
 export const authSlice = createSlice({
@@ -74,45 +63,44 @@ export const authSlice = createSlice({
     },
   },
 
-  extraReducers: (builder) => {
-    builder
-      .addCase(register.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(register.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSucces = true;
-        state.isError = false;
-        state.user = action.payload;
-      })
-      .addCase(register.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-        state.user = null;
-      })
+  extraReducers: {
+    [register.pending](state) {
+      state.isLoading = true;
+    },
+    [register.fulfilled](state, action) {
+      state.isLoading = false;
+      state.isSucces = true;
+      state.isError = false;
+      state.user = action.payload;
+    },
+    [register.rejected](state, action) {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+      state.user = null;
+    },
 
-      .addCase(login.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(login.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSucces = true;
-        state.isError = false;
-        state.user = action.payload;
-      })
-      .addCase(login.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-        state.user = null;
-      })
-      .addCase(logout.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(logout.fulfilled, (state) => {
-        state.user = null;
-      });
+    [login.pending](state) {
+      state.isLoading = true;
+    },
+    [login.fulfilled](state, action) {
+      state.isLoading = false;
+      state.isSucces = true;
+      state.isError = false;
+      state.user = action.payload;
+    },
+    [login.rejected](state, action) {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+      state.user = null;
+    },
+    [logout.pending](state) {
+      state.isLoading = true;
+    },
+    [logout.fulfilled](state) {
+      state.user = null;
+    },
   },
 });
 

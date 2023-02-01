@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+axios.defaults.baseURL = "http://localhost:8081";
+
 const initialState = {
   intrests: [],
   isError: false,
@@ -10,13 +12,9 @@ const initialState = {
 
 export const getIntrests = createAsyncThunk(
   "intrest/get",
-  async (intrest, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
-      const response = await axios.get("http://localhost:8081/intrest/get", {
-        headers: {
-          Authorization: `Bearer ${intrest}`,
-        },
-      });
+      const response = await axios.get("/intrest/get");
       return response.data;
     } catch (error) {
       const message =
@@ -33,17 +31,11 @@ export const getIntrests = createAsyncThunk(
 
 export const createIntrest = createAsyncThunk(
   "intrest/add",
-  async (intrests, thunkAPI) => {
+  async (intrest, thunkAPI) => {
     try {
-      const response = await axios.patch(
-        "http://localhost:8081/intrest/add",
-        { intrests: intrests.details },
-        {
-          headers: {
-            Authorization: `Bearer ${intrests.token}`,
-          },
-        }
-      );
+      const response = await axios.patch("/intrest/add", {
+        intrest,
+      });
 
       return response.data;
     } catch (error) {
@@ -61,18 +53,9 @@ export const createIntrest = createAsyncThunk(
 
 export const deleteIntrest = createAsyncThunk(
   "intrest/delete",
-  async (data, thunkAPI) => {
+  async (intrest, thunkAPI) => {
     try {
-      const response = await axios.patch(
-        "http://localhost:8081/intrest/delete",
-        { intrest: data.intrest },
-        {
-          headers: {
-            Authorization: `Bearer ${data.token}`,
-          },
-        }
-      );
-
+      const response = await axios.patch("/intrest/delete", { intrest });
       return response.data;
 
       //
@@ -101,53 +84,50 @@ export const intrestSlice = createSlice({
     },
   },
 
-  extraReducers: (builder) => {
-    builder
-      .addCase(getIntrests.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getIntrests.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSucces = true;
-        state.isError = false;
-        state.intrests = action.payload;
-      })
-      .addCase(getIntrests.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-        state.intrests = [];
-      })
-      .addCase(createIntrest.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(createIntrest.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSucces = true;
-        state.isError = false;
-        state.intrests = action.payload;
-      })
-      .addCase(createIntrest.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-        state.intrests = null;
-      })
-      .addCase(deleteIntrest.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(deleteIntrest.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSucces = true;
-        state.isError = false;
-        state.intrests = action.payload;
-      })
-      .addCase(deleteIntrest.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-        state.intrests = null;
-      });
+  extraReducers: {
+    [getIntrests.pending](state) {
+      state.isLoading = true;
+    },
+    [getIntrests.fulfilled](state, action) {
+      state.isLoading = false;
+      state.isSucces = true;
+      state.isError = false;
+      state.intrests = action.payload;
+    },
+    [getIntrests.rejected](state, action) {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+      state.intrests = [];
+    },
+    [createIntrest.pending](state) {
+      state.isLoading = true;
+    },
+    [createIntrest.fulfilled](state, action) {
+      state.isLoading = false;
+      state.isSucces = true;
+      state.isError = false;
+      state.intrests.push(action.payload);
+    },
+    [createIntrest.rejected](state, action) {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+    },
+    [deleteIntrest.pending](state) {
+      state.isLoading = true;
+    },
+    [deleteIntrest.fulfilled](state, action) {
+      state.isLoading = false;
+      state.isSucces = true;
+      state.isError = false;
+      state.intrests = action.payload;
+    },
+    [deleteIntrest.rejected](state, action) {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+    },
   },
 });
 

@@ -8,20 +8,23 @@ const persistConfig = {
   key: "root",
   storage,
 };
-const rootReducer = combineReducers({
-  auth: authSlice,
-  intrests: intrestSlice,
-});
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-// const store = configureStore({
-//   reducer: {
-//     auth: authSlice.reducer,
-//   },
+// const rootReducer = combineReducers({
+//   auth: authSlice,
+//   intrests: intrestSlice,
 // });
 
+// const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: {
+    auth: persistReducer(persistConfig, authSlice),
+    intrests: intrestSlice,
+  },
 });
+
+// const store = configureStore({
+//   reducer: persistedReducer,
+// });
 const persistor = persistStore(store);
 export { store, persistor };
