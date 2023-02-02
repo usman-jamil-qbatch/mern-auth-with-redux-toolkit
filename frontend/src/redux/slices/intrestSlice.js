@@ -56,7 +56,9 @@ export const deleteIntrest = createAsyncThunk(
   async (intrest, thunkAPI) => {
     try {
       const response = await axios.patch("/intrest/delete", { intrest });
-      return response.data;
+      if (response.data) {
+        return intrest;
+      }
 
       //
     } catch (error) {
@@ -121,7 +123,10 @@ export const intrestSlice = createSlice({
       state.isLoading = false;
       state.isSucces = true;
       state.isError = false;
-      state.intrests = action.payload;
+      state.intrests.splice(
+        state.intrests.findIndex((arrow) => arrow.intrest === action.payload),
+        1
+      );
     },
     [deleteIntrest.rejected](state, action) {
       state.isLoading = false;

@@ -1,5 +1,4 @@
 const User = require("../models/userModel");
-const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
@@ -7,6 +6,10 @@ require("dotenv").config();
 const createUser = async (req, res) => {
   try {
     const { fName, lName, designation, email, password } = req.body;
+    if (!fName || !lName || !designation || !email || !password) {
+      res.status(400);
+      throw new Error("Fill the form first");
+    }
     const oldUser = await User.findOne({ email: req.body.email });
     if (oldUser) {
       res.status(400);
@@ -32,11 +35,6 @@ const createUser = async (req, res) => {
   } catch (error) {
     return res.send(error.message);
   }
-};
-
-const getUsers = async (req, res) => {
-  const result = await User.find();
-  res.send(result);
 };
 
 const signIn = async (req, res) => {
@@ -67,20 +65,7 @@ const signIn = async (req, res) => {
   }
 };
 
-// const updateUser = async (req, res) => {
-//   const user = await User.updateUserById(req.params.userId, req.body);
-//   res.send(user);
-// };
-
-// const deleteUser = async (req, res) => {
-//   await User.deleteUserById(req.params.userId);
-//   res.send(true);
-// };
-
 module.exports = {
   createUser,
-  getUsers,
   signIn,
-  // updateUser,
-  // deleteUser,
 };

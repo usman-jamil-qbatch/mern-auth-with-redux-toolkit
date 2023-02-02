@@ -7,8 +7,16 @@ import {
   createIntrest,
   deleteIntrest,
 } from "../redux/slices/intrestSlice";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 
-const Dashboard = () => {
+export default function Dashboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -43,31 +51,79 @@ const Dashboard = () => {
     dispatch(deleteIntrest(intrest));
   };
   return (
-    <div>
-      <div>Dashboard</div>
-      {intrests &&
-        intrests.length > 0 &&
-        intrests?.map((data, i) => (
-          <button key={i} onClick={() => handleDelete(data.intrest)}>
-            {data.intrest}
-          </button>
-        ))}
-      <form onSubmit={formSubmit}>
-        <label>
-          Intrest:
-          <input
-            type="text"
-            name="intrests"
-            // value={details.fName}
-            onChange={handleChange}
-          />
-        </label>
+    <Grid
+      container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      style={{ minHeight: "100vh" }}
+    >
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: 360,
+          maxHeight: 200,
+          minHeight: 200,
+          overflow: "auto",
+          bgcolor: "background.paper",
+        }}
+      >
+        <nav aria-label="main mailbox folders">
+          <List>
+            {intrests &&
+              intrests.length > 0 &&
+              intrests?.map((data, i) => (
+                <ListItem
+                  sx={{ border: 1, borderRadius: "8px" }}
+                  key={i}
+                  disablePadding
+                >
+                  <ListItemButton
+                    key={i}
+                    onClick={() => handleDelete(data.intrest)}
+                  >
+                    <ListItemText primary={data.intrest} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+          </List>
+        </nav>
+      </Box>
+      <Box
+        component="form"
+        noValidate
+        sx={{ mt: 1, width: "100%", maxWidth: 360 }}
+      >
+        <TextField
+          onChange={handleChange}
+          margin="normal"
+          fullWidth
+          id="intrests"
+          label="Intrest"
+          name="intrests"
+          autoFocus
+        />
 
-        <input type="submit" value="Add" />
-      </form>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
+        <Button
+          type="submit"
+          onClick={formSubmit}
+          fullWidth
+          variant="contained"
+          sx={{ mt: 2, mb: 2 }}
+        >
+          Add
+        </Button>
+        <Grid container></Grid>
+      </Box>
+      <Button
+        type="submit"
+        onClick={handleLogout}
+        variant="contained"
+        sx={{ mt: 2, mb: 2 }}
+      >
+        Logout
+      </Button>
+    </Grid>
   );
-};
-
-export default Dashboard;
+}

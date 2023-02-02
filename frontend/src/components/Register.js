@@ -2,8 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { register, reset } from "../redux/slices/authSlice";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-const Register = () => {
+const theme = createTheme();
+
+export default function Register() {
   const initialState = {
     fName: "",
     lName: "",
@@ -16,7 +28,7 @@ const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, isLoading, isError, isSucces, message } = useSelector(
+  const { user, isError, isSucces, message } = useSelector(
     (state) => state.auth
   );
   useEffect(() => {
@@ -41,55 +53,96 @@ const Register = () => {
   };
 
   return (
-    <form onSubmit={formSubmit}>
-      <label>
-        First Name:
-        <input
-          type="text"
-          name="fName"
-          value={details.fName}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Last Name:
-        <input
-          type="text"
-          name="lName"
-          value={details.lName}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Designation:
-        <input
-          type="text"
-          name="designation"
-          value={details.designation}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Email:
-        <input
-          type="email"
-          name="email"
-          value={details.email}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Password:
-        <input
-          type="password"
-          name="password"
-          value={details.password}
-          onChange={handleChange}
-        />
-      </label>
-      <input type="submit" value="Submit" />
-    </form>
-  );
-};
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
+          <Typography component="h1" variant="h5">
+            Sign Up
+          </Typography>
+          <Box
+            component="form"
+            // onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
+            <TextField
+              onChange={handleChange}
+              margin="normal"
+              required
+              fullWidth
+              name="fName"
+              label="FName"
+              type="fName"
+              id="fName"
+            />
+            <TextField
+              onChange={handleChange}
+              margin="normal"
+              required
+              fullWidth
+              name="lName"
+              label="LastName"
+              type="lName"
+              id="lName"
+              autoComplete="current-password"
+            />
+            <TextField
+              onChange={handleChange}
+              margin="normal"
+              required
+              fullWidth
+              name="designation"
+              label="Designation"
+              type="designation"
+              id="designation"
+            />
+            <TextField
+              onChange={handleChange}
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              onChange={handleChange}
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
 
-export default Register;
+            <Button
+              type="submit"
+              onClick={formSubmit}
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign Up
+            </Button>
+
+            <Link href="/login">Alredy have account, Sign In</Link>
+            <Grid container></Grid>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
+  );
+}

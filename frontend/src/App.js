@@ -7,7 +7,7 @@ import Protected from "./components/Protected";
 import Home from "./components/Home";
 import Ristricted from "./components/Ristricted";
 import { setAuthToken } from "./config/axios-config";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 function App() {
   const { user } = useSelector((state) => state.auth);

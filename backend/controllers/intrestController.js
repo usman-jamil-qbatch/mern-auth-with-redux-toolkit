@@ -1,7 +1,4 @@
 const User = require("../models/userModel");
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 const createIntreest = async (req, res) => {
@@ -42,13 +39,8 @@ const deleteIntrest = async (req, res) => {
       { $pull: { intrests: { intrest: req.body.intrest } } }
     );
 
-    if (status.modifiedCount == 1) {
-      const data = await User.findOne({ _id: req.user.id });
-      //   const test = await User.find(
-      //     { _id: req.user.id },
-      //     { intrests: { $elemMatch: { intrest: req.body.intrest } } }
-      //   );
-      return res.send(data.intrests);
+    if (status.modifiedCount == 1 && status.acknowledged) {
+      return res.send(status.acknowledged);
     } else {
       res.status(500);
       throw new Error("server error");
